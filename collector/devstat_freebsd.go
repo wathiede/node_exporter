@@ -92,11 +92,6 @@ Stats _get_stats(int i) {
 		DSM_TOTAL_TRANSFERS_READ, &transfers_read,
 		DSM_TOTAL_TRANSFERS_WRITE, &transfers_write,
 		DSM_TOTAL_TRANSFERS_FREE, &transfers_free,
-		DSM_TOTAL_DURATION_OTHER, &duration_other,
-		DSM_TOTAL_DURATION_READ, &duration_read,
-		DSM_TOTAL_DURATION_WRITE, &duration_write,
-		DSM_TOTAL_DURATION_FREE, &duration_free,
-		DSM_TOTAL_BUSY_TIME, &busy_time,
 		DSM_TOTAL_BLOCKS, &blocks,
 		DSM_NONE);
 

@@ -99,7 +99,8 @@ func getNetDevStats() (map[string]map[string]map[string]string, error) {
 			receive["multicast"] = strconv.Itoa(int(data.ifi_imcasts))
 			transmit["multicast"] = strconv.Itoa(int(data.ifi_omcasts))
 			receive["drop"] = strconv.Itoa(int(data.ifi_iqdrops))
-			transmit["drop"] = strconv.Itoa(int(data.ifi_oqdrops))
+			// TODO(wathiede): #ifdef HAVE_STRUCT_IF_DATA_IFI_OQDROPS?
+			//transmit["drop"] = strconv.Itoa(int(data.ifi_oqdrops))
 
 			netDev["receive"][C.GoString(ifa.ifa_name)] = receive
 			netDev["transmit"][C.GoString(ifa.ifa_name)] = transmit

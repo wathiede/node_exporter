@@ -11,6 +11,7 @@ import (
 
 /*
 #include <stddef.h>
+#include <sys/types.h>
 #include <sys/sysctl.h>
 
 int _sysctl(const char* name) {

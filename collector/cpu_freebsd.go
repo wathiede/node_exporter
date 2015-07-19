@@ -57,7 +57,7 @@ func (c *statCollector) Update(ch chan<- prometheus.Metric) (err error) {
 	}
 	defer C.kvm_close(kd)
 
-	ncpus := C.kvm_getncpus(kd)
+	ncpus := C.kvm_getmaxcpu(kd)
 	for i := 0; i < int(ncpus); i++ {
 		pcpu := C.kvm_getpcpu(kd, C.int(i))
 		cp_time := ((*C.struct_pcpu)(unsafe.Pointer(pcpu))).pc_cp_time
