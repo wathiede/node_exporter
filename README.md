@@ -21,6 +21,7 @@ Name     | Description | OS
 conntrack | Shows conntrack statistics (does nothing if no `/proc/sys/net/netfilter/` present). | Linux
 cpu | Exposes CPU statistics | FreeBSD
 diskstats | Exposes disk I/O statistics from `/proc/diskstats`. | Linux
+edac | Exposes error detection and correction statistics. | Linux
 entropy | Exposes available entropy. | Linux
 filefd | Exposes file descriptor statistics from `/proc/sys/fs/file-nr`. | Linux
 filesystem | Exposes filesystem statistics, such as disk space used. | FreeBSD, Dragonfly, Linux, OpenBSD
