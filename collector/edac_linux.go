@@ -59,32 +59,32 @@ func init() {
 func NewEdacCollector() (Collector, error) {
 	return &edacCollector{
 		ceCount: prometheus.NewDesc(
-			prometheus.BuildFQName(Namespace, edacSubsystem, "ce_count"),
+			prometheus.BuildFQName(Namespace, edacSubsystem, "correctable_errors_total"),
 			"Total correctable memory errors.",
 			[]string{"controller"}, nil,
 		),
 		ceNoinfoCount: prometheus.NewDesc(
-			prometheus.BuildFQName(Namespace, edacSubsystem, "ce_noinfo_count"),
+			prometheus.BuildFQName(Namespace, edacSubsystem, "no_csrow_correctable_errors_total"),
 			"Total correctable memory errors with no DIMM information.",
 			[]string{"controller"}, nil,
 		),
 		ueCount: prometheus.NewDesc(
-			prometheus.BuildFQName(Namespace, edacSubsystem, "ue_count"),
+			prometheus.BuildFQName(Namespace, edacSubsystem, "uncorrectable_errors_total"),
 			"Total uncorrectable memory errors.",
 			[]string{"controller"}, nil,
 		),
 		ueNoinfoCount: prometheus.NewDesc(
-			prometheus.BuildFQName(Namespace, edacSubsystem, "ue_noinfo_count"),
+			prometheus.BuildFQName(Namespace, edacSubsystem, "no_csrow_uncorrectable_errors_total"),
 			"Total uncorrectable memory errors with no DIMM information.",
 			[]string{"controller"}, nil,
 		),
 		csrowCeCount: prometheus.NewDesc(
-			prometheus.BuildFQName(Namespace, edacSubsystem, "csrow_ce_count"),
+			prometheus.BuildFQName(Namespace, edacSubsystem, "csrow_correctable_errors_total"),
 			"Total correctable memory errors for this csrow.",
 			[]string{"controller", "csrow"}, nil,
 		),
 		csrowUeCount: prometheus.NewDesc(
-			prometheus.BuildFQName(Namespace, edacSubsystem, "csrow_ue_count"),
+			prometheus.BuildFQName(Namespace, edacSubsystem, "csrow_uncorrectable_errors_total"),
 			"Total correctable memory errors for this csrow.",
 			[]string{"controller", "csrow"}, nil,
 		),
