@@ -97,38 +97,39 @@ func (c *edacCollector) Update(ch chan<- prometheus.Metric) (err error) {
 		return err
 	}
 	for _, controller := range memControllers {
-		controllerNumber := edacMemControllerRE.FindStringSubmatch(controller)
-		if controllerNumber == nil {
+		controllerMatch := edacMemControllerRE.FindStringSubmatch(controller)
+		if controllerMatch == nil {
 			return fmt.Errorf("controller number string didn't match regexp: %s", controller)
 		}
+		controllerNumber := controllerMatch[1]
 
 		value, err := readUintFromFile(path.Join(controller, "ce_count"))
 		if err != nil {
 			return fmt.Errorf("couldn't get ce_count for controller %s: %s", controllerNumber, err)
 		}
 		ch <- prometheus.MustNewConstMetric(
-			c.ceCount, prometheus.CounterValue, float64(value))
+			c.ceCount, prometheus.CounterValue, float64(value), controllerNumber)
 
 		value, err = readUintFromFile(path.Join(controller, "ce_noinfo_count"))
 		if err != nil {
 			return fmt.Errorf("couldn't get ce_noinfo_count for controller %s: %s", controllerNumber, err)
 		}
 		ch <- prometheus.MustNewConstMetric(
-			c.ceNoinfoCount, prometheus.CounterValue, float64(value))
+			c.ceNoinfoCount, prometheus.CounterValue, float64(value), controllerNumber)
 
 		value, err = readUintFromFile(path.Join(controller, "ue_count"))
 		if err != nil {
 			return fmt.Errorf("couldn't get ue_count for controller %s: %s", controllerNumber, err)
 		}
 		ch <- prometheus.MustNewConstMetric(
-			c.ueCount, prometheus.CounterValue, float64(value))
+			c.ueCount, prometheus.CounterValue, float64(value), controllerNumber)
 
 		value, err = readUintFromFile(path.Join(controller, "ue_noinfo_count"))
 		if err != nil {
 			return fmt.Errorf("couldn't get ue_noinfo_count for controller %s: %s", controllerNumber, err)
 		}
 		ch <- prometheus.MustNewConstMetric(
-			c.ueNoinfoCount, prometheus.CounterValue, float64(value))
+			c.ueNoinfoCount, prometheus.CounterValue, float64(value), controllerNumber)
 
 		// For each controller, walk the csrow directories.
 		csrows, err := filepath.Glob(controller + "csrow[0-9]*")
