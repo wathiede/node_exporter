@@ -87,7 +87,7 @@ func (c *edacCollector) Update(ch chan<- prometheus.Metric) (err error) {
 	for _, controller := range memControllers {
 		controllerMatch := edacMemControllerRE.FindStringSubmatch(controller)
 		if controllerMatch == nil {
-			return fmt.Errorf("controller number string didn't match regexp: %s", controller)
+			return fmt.Errorf("controller string didn't match regexp: %s", controller)
 		}
 		controllerNumber := controllerMatch[1]
 
@@ -125,11 +125,25 @@ func (c *edacCollector) Update(ch chan<- prometheus.Metric) (err error) {
 			return err
 		}
 		for _, csrow := range csrows {
-			csrowNumber := edacMemCsrowRE.FindStringSubmatch(csrow)
-			if csrowNumber == nil {
-				return fmt.Errorf("controller number string didn't match regexp: %s", controller)
+			csrowMatch := edacMemCsrowRE.FindStringSubmatch(csrow)
+			if csrowMatch == nil {
+				return fmt.Errorf("csrow string didn't match regexp: %s", csrow)
 			}
-			// TODO: Add csrow metrics
+			csrowNumber := csrowMatch[1]
+
+			value, err = readUintFromFile(path.Join(csrow, "ce_count"))
+			if err != nil {
+				return fmt.Errorf("couldn't get ce_count for controller/csrow %s/%s: %s", controllerNumber, csrowNumber, err)
+			}
+			ch <- prometheus.MustNewConstMetric(
+				c.csrowCeCount, prometheus.CounterValue, float64(value), controllerNumber, csrowNumber)
+
+			value, err = readUintFromFile(path.Join(csrow, "ue_count"))
+			if err != nil {
+				return fmt.Errorf("couldn't get ue_count for controller/csrow %s/%s: %s", controllerNumber, csrowNumber, err)
+			}
+			ch <- prometheus.MustNewConstMetric(
+				c.csrowUeCount, prometheus.CounterValue, float64(value), controllerNumber, csrowNumber)
 		}
 	}
 
