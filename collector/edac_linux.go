@@ -42,12 +42,10 @@ type edacMCMetric struct {
 }
 
 type edacCollector struct {
-	ceCount       *prometheus.Desc
-	ceNoinfoCount *prometheus.Desc
-	ueCount       *prometheus.Desc
-	ueNoinfoCount *prometheus.Desc
-	csrowCeCount  *prometheus.Desc
-	csrowUeCount  *prometheus.Desc
+	ceCount      *prometheus.Desc
+	ueCount      *prometheus.Desc
+	csrowCeCount *prometheus.Desc
+	csrowUeCount *prometheus.Desc
 }
 
 func init() {
@@ -63,19 +61,9 @@ func NewEdacCollector() (Collector, error) {
 			"Total correctable memory errors.",
 			[]string{"controller"}, nil,
 		),
-		ceNoinfoCount: prometheus.NewDesc(
-			prometheus.BuildFQName(Namespace, edacSubsystem, "no_csrow_correctable_errors_total"),
-			"Total correctable memory errors with no DIMM information.",
-			[]string{"controller"}, nil,
-		),
 		ueCount: prometheus.NewDesc(
 			prometheus.BuildFQName(Namespace, edacSubsystem, "uncorrectable_errors_total"),
 			"Total uncorrectable memory errors.",
-			[]string{"controller"}, nil,
-		),
-		ueNoinfoCount: prometheus.NewDesc(
-			prometheus.BuildFQName(Namespace, edacSubsystem, "no_csrow_uncorrectable_errors_total"),
-			"Total uncorrectable memory errors with no DIMM information.",
 			[]string{"controller"}, nil,
 		),
 		csrowCeCount: prometheus.NewDesc(
@@ -115,7 +103,7 @@ func (c *edacCollector) Update(ch chan<- prometheus.Metric) (err error) {
 			return fmt.Errorf("couldn't get ce_noinfo_count for controller %s: %s", controllerNumber, err)
 		}
 		ch <- prometheus.MustNewConstMetric(
-			c.ceNoinfoCount, prometheus.CounterValue, float64(value), controllerNumber)
+			c.csrowCeCount, prometheus.CounterValue, float64(value), controllerNumber, "unknown")
 
 		value, err = readUintFromFile(path.Join(controller, "ue_count"))
 		if err != nil {
@@ -129,7 +117,7 @@ func (c *edacCollector) Update(ch chan<- prometheus.Metric) (err error) {
 			return fmt.Errorf("couldn't get ue_noinfo_count for controller %s: %s", controllerNumber, err)
 		}
 		ch <- prometheus.MustNewConstMetric(
-			c.ueNoinfoCount, prometheus.CounterValue, float64(value), controllerNumber)
+			c.csrowUeCount, prometheus.CounterValue, float64(value), controllerNumber, "uknown")
 
 		// For each controller, walk the csrow directories.
 		csrows, err := filepath.Glob(controller + "csrow[0-9]*")
