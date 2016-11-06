@@ -124,7 +124,7 @@ func NewStatCollector() (Collector, error) {
 		cpu: prometheus.NewCounterVec(
 			prometheus.CounterOpts{
 				Namespace: Namespace,
-				Name:      "cpu_seconds_total",
+				Name:      "cpu",
 				Help:      "Seconds the CPU spent in each mode.",
 			},
 			[]string{"cpu", "mode"},
