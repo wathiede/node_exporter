@@ -25,6 +25,7 @@ import (
 
 /*
 #cgo LDFLAGS:
+#cgo CFLAGS: -DSMP=1
 #include <fcntl.h>
 #include <stdlib.h>
 #include <sys/param.h>
