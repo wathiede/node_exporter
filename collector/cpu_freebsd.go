@@ -80,19 +80,19 @@ func getCPUTimes() ([]cputime, error) {
 	return cpus, nil
 }
 
-type statCollector struct {
+type cpuCollector struct {
 	cpu  typedDesc
 	temp typedDesc
 }
 
 func init() {
-	Factories["cpu"] = NewStatCollector
+	Factories["cpu"] = NewCPUCollector
 }
 
 // Takes a prometheus registry and returns a new Collector exposing
 // CPU stats.
-func NewStatCollector() (Collector, error) {
-	return &statCollector{
+func NewCPUCollector() (Collector, error) {
+	return &cpuCollector{
 		cpu: typedDesc{prometheus.NewDesc(
 			prometheus.BuildFQName(Namespace, "cpu", "seconds_total"),
 			"Seconds the CPU spent in each mode.",
@@ -107,7 +107,7 @@ func NewStatCollector() (Collector, error) {
 }
 
 // Expose CPU stats using sysctl.
-func (c *statCollector) Update(ch chan<- prometheus.Metric) error {
+func (c *cpuCollector) Update(ch chan<- prometheus.Metric) error {
 	// We want time spent per-cpu per CPUSTATE.
 	// CPUSTATES (number of CPUSTATES) is defined as 5U.
 	// Order: CP_USER | CP_NICE | CP_SYS | CP_IDLE | CP_INTR
